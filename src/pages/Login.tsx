@@ -12,40 +12,36 @@ import {
   IonCardContent,
   IonCardHeader,
   useIonToast,
-  IonRouterLink,
   IonText,
+  IonRouterLink,
 } from "@ionic/react";
 import { FormProvider, useForm } from "react-hook-form";
 import "./Page.css";
 import Input from "../components/Input";
-import { registerUser } from "../api/client";
+import { login } from "../api/client";
 import { useContext } from "react";
 import { UserContext } from "../App";
 
-const Register: React.FC = () => {
+const Login: React.FC = () => {
   const [showToast] = useIonToast();
   const formMethods = useForm();
   const { control, handleSubmit } = formMethods;
 
   const user = useContext(UserContext);
 
-  const handleRegisterUser: any = (data: any) => {
-    if (data.password != data.confirm) {
-      showToast({
-        message: "Passwords do not match!",
-        color: "danger",
-        duration: 2500,
-      });
-      return;
-    }
-    registerUser(data)
-      .then(() => {
+  const handleUserLogin: any = (data: any) => {
+    login(data)
+      .then((res) => {
         user.setEmail(data.email);
-        showToast({ message: "User successfully created", duration: 2500 });
+        showToast({
+          message: "Login successful!",
+          color: "success",
+          duration: 2500,
+        });
       })
-      .catch((err) =>
-        showToast({ message: err, color: "danger", duration: 2500 })
-      );
+      .catch((err) => {
+        showToast({ message: err, color: "danger", duration: 2500 });
+      });
   };
 
   return (
@@ -62,40 +58,35 @@ const Register: React.FC = () => {
       <IonContent fullscreen>
         <IonCard>
           <IonCardHeader>
-            <IonTitle className="center-text">Register</IonTitle>
+            <IonTitle className="center-text">Login</IonTitle>
           </IonCardHeader>
           <IonCardContent>
             <FormProvider {...formMethods}>
-              <form onSubmit={handleSubmit(handleRegisterUser)}>
+              <form onSubmit={handleSubmit(handleUserLogin)}>
                 <Input
                   name="email"
-                  label="Enter an email address"
+                  label="Enter your email address"
                   {...{ type: "email" }}
                 />
                 <Input
                   name="password"
-                  label="Choose a password"
-                  {...{ type: "password" }}
-                />
-                <Input
-                  name="confirm"
-                  label="Confirm Password"
+                  label="Enter your password"
                   {...{ type: "password" }}
                 />
                 <IonButton className="ion-margin" type="submit">
-                  Submit
+                  Login
                 </IonButton>
               </form>
             </FormProvider>
           </IonCardContent>
         </IonCard>
         <IonText className="ion-padding center-text">
-          Already have an account?{" "}
-          <IonRouterLink href="/login">Login</IonRouterLink>
+          Don't have an account?{" "}
+          <IonRouterLink href="/register">Register</IonRouterLink>
         </IonText>
       </IonContent>
     </IonPage>
   );
 };
 
-export default Register;
+export default Login;

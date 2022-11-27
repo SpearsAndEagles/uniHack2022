@@ -8,7 +8,7 @@ import { IonReactRouter } from "@ionic/react-router";
 import { Redirect, Route } from "react-router-dom";
 import Menu from "./components/Menu";
 import Page from "./pages/Page";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import Register from "./pages/Register";
 import Add from "./pages/Add";
 import Login from "./pages/Login";
@@ -30,26 +30,45 @@ import "@ionic/react/css/display.css";
 
 /* Theme variables */
 import "./theme/variables.css";
+import { Observatie } from "./types";
 
 setupIonicReact();
 
 export const UserContext = createContext<{
   setEmail: Function;
   addObservation: Function;
-}>({ setEmail: {} as Function, addObservation: {} as Function });
+  email: string;
+  tripActive: boolean;
+}>({
+  setEmail: {} as Function,
+  addObservation: {} as Function,
+  email: "",
+  tripActive: false,
+});
 
 const App: React.FC = () => {
-  const [userState, setUserState] = useState({
+  const [userState, setUserStatewithout] = useState({
     currTrip: { descriere: "", titlu: "", observatii: [{}] },
     email: "",
   });
 
-  const setEmail = (newEmail: any) => {
-    setUserState((prev) => ({ ...prev, email: newEmail }));
+  useEffect(() => {
+    if (localStorage.userState1) {
+      setUserStatewithout(JSON.parse(localStorage.userState1));
+    }
+  }, []);
+
+  const setUserState = (data: any) => {
+    setUserStatewithout(data);
+    localStorage.userState1 = JSON.stringify(userState);
   };
 
-  const addObservation = (newObs: any) => {
-    setUserState((prev) => {
+  const setEmail = (newEmail: string) => {
+    setUserState((prev: any) => ({ ...prev, email: newEmail }));
+  };
+
+  const addObservation = (newObs: Observatie) => {
+    setUserState((prev: any) => {
       const newData = { ...prev };
       newData.currTrip.observatii.push(newObs);
       return newData;
@@ -58,7 +77,12 @@ const App: React.FC = () => {
 
   return (
     <UserContext.Provider
-      value={{ setEmail: setEmail, addObservation: addObservation }}
+      value={{
+        setEmail: setEmail,
+        addObservation: addObservation,
+        email: userState.email,
+        tripActive: false,
+      }}
     >
       <IonApp>
         <IonReactRouter>

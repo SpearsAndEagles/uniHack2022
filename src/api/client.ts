@@ -6,7 +6,14 @@ import {
   CollectionReference,
   addDoc,
 } from "firebase/firestore";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signOut,
+  signInAnonymously,
+  signInWithCredential,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { firebaseConfig } from "../constants/firebaseconfig";
 import type { Animal, Trip, User } from "../types";
 
@@ -33,6 +40,16 @@ export async function requestAnimals() {
 
   localStorage.Animals = reqData;
   return reqData;
+}
+
+export async function logout() {
+  const res = await signOut(auth);
+  return res;
+}
+
+export async function login(data: User) {
+  const res = await signInWithEmailAndPassword(auth, data.email, data.password);
+  return res;
 }
 
 export async function registerUser(data: User) {
