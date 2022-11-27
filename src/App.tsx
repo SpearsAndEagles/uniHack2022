@@ -11,6 +11,7 @@ import Page from "./pages/Page";
 import { createContext, useState } from "react";
 import Register from "./pages/Register";
 import Add from "./pages/Add";
+import Login from "./pages/Login";
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
 
@@ -70,6 +71,9 @@ const App: React.FC = () => {
                 ) : (
                   <Redirect to="/login"></Redirect>
                 )}
+              </Route>
+              <Route path="/login">
+                <Login />
               </Route>
               <Route path="/register" exact>
                 <Register></Register>

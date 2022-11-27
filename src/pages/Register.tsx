@@ -16,13 +16,30 @@ import {
 import { FormProvider, useForm } from "react-hook-form";
 import "./Page.css";
 import Input from "../components/Input";
+import { registerUser } from "../api/client";
 
 const Register: React.FC = () => {
   const [showToast] = useIonToast();
   const formMethods = useForm();
   const { control, handleSubmit } = formMethods;
 
-  const handleRegisterUser: any = (data: any) => {};
+  const handleRegisterUser: any = (data: any) => {
+    if (data.password != data.confirm) {
+      showToast({
+        message: "Passwords do not match!",
+        color: "danger",
+        duration: 2500,
+      });
+      return;
+    }
+    registerUser(data)
+      .then(() =>
+        showToast({ message: "User successfully created", duration: 2500 })
+      )
+      .catch((err) =>
+        showToast({ message: err, color: "danger", duration: 2500 })
+      );
+  };
 
   return (
     <IonPage>

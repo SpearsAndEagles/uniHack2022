@@ -36,7 +36,12 @@ export async function requestAnimals() {
 }
 
 export async function registerUser(data: User) {
-  createUserWithEmailAndPassword(auth, data.email, data.password);
+  const mata = await createUserWithEmailAndPassword(
+    auth,
+    data.email,
+    data.password
+  );
+  return mata;
 }
 
 export async function postTrip(trip: Trip) {
