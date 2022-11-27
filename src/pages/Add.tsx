@@ -1,5 +1,5 @@
 import {
-    IonRow,
+  IonRow,
   IonButtons,
   IonContent,
   IonHeader,
@@ -11,27 +11,23 @@ import {
   IonCard,
   IonCardContent,
   IonCardHeader,
-  useIonToast
+  useIonToast,
 } from "@ionic/react";
+import { UserContext } from "../App";
 import { FormProvider, useForm } from "react-hook-form";
 import "./Page.css";
-import Input from "../components/Input"
+import Input from "../components/Input";
+import { useContext } from "react";
 
 const Add: React.FC = () => {
-    const [showToast] = useIonToast();
-    const formMethods = useForm(); 
-    const {control, handleSubmit} = formMethods;
+  const [showToast] = useIonToast();
+  const formMethods = useForm();
+  const context = useContext(UserContext);
+  const { control, handleSubmit } = formMethods;
 
-    const handleRegisterUser : any = (data : any) => {
-        if(data.password != data.confirm){
-            showToast({message: "Passwords do not match",
-                duration: 2500,
-                position: 'top',
-                color: "danger"}
-          );
-            return null;
-        }
-    }
+  const handleAdd: any = (data: any) => {
+    context.addObservation(data);
+  };
 
   return (
     <IonPage>
@@ -46,19 +42,25 @@ const Add: React.FC = () => {
 
       <IonContent fullscreen>
         <IonCard>
-            <IonCardHeader>
-                <IonTitle className="center-text">Add Specimen</IonTitle>
-            </IonCardHeader>
-        <IonCardContent>
+          <IonCardHeader>
+            <IonTitle className="center-text">Add Specimen</IonTitle>
+          </IonCardHeader>
+          <IonCardContent>
             <FormProvider {...formMethods}>
-                <form onSubmit={handleSubmit(handleRegisterUser)}>
-                        <Input name="species" label="Enter the species' name" />
-                        <Input name="comportament" label="Introduceti comportamentul" />
-                        <Input name="numar" label="Enter the number" {...{type: "number"}}/>
-                        <IonButton className="ion-margin"type="submit">Submit</IonButton>
-                </form>
+              <form onSubmit={handleSubmit(handleAdd)}>
+                <Input name="species" label="Enter the species' name" />
+                <Input name="comportament" label="Introduceti comportamentul" />
+                <Input
+                  name="numar"
+                  label="Enter the number"
+                  {...{ type: "number" }}
+                />
+                <IonButton className="ion-margin" type="submit">
+                  Submit
+                </IonButton>
+              </form>
             </FormProvider>
-        </IonCardContent>
+          </IonCardContent>
         </IonCard>
       </IonContent>
     </IonPage>

@@ -1,3 +1,5 @@
+export type User = { email: string; password: string };
+
 export type Animal = {
   denumire: string;
   denumireStiintifica: string;
@@ -10,11 +12,21 @@ export type Observatie = {
   animal: string;
   numar: string;
   data: Date;
-  comportament: "prezent" | "pereche cuibaritoare" | "adult cuibaritor" | "comportament nuptial" | "hranire" | "in zbor" | "cuib ocupat" | "odihna" | "vanatoare" | "mort pe sosea";
+  comportament:
+    | "prezent"
+    | "pereche cuibaritoare"
+    | "adult cuibaritor"
+    | "comportament nuptial"
+    | "hranire"
+    | "in zbor"
+    | "cuib ocupat"
+    | "odihna"
+    | "vanatoare"
+    | "mort pe sosea";
 };
 
 export type Trip = {
-    titlu: string;
-    descriere: string;
-    observatii: Array<Observatie>;
-}
+  titlu: string;
+  descriere: string;
+  observatii: Array<Observatie>;
+};
