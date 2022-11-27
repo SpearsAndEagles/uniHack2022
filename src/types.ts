@@ -25,7 +25,7 @@ export type Observatie = {
     | "mort pe sosea";
 };
 
-export type Trip = {
+export type TripType = {
   titlu: string;
   descriere: string;
   observatii: Array<Observatie>;

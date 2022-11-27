@@ -15,7 +15,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { firebaseConfig } from "../constants/firebaseconfig";
-import type { Animal, Trip, User } from "../types";
+import type { Animal, TripType, User } from "../types";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -61,7 +61,7 @@ export async function registerUser(data: User) {
   return mata;
 }
 
-export async function postTrip(trip: Trip) {
+export async function postTrip(trip: TripType) {
   trip.observatii.forEach((observatie) => {
     let res = addDoc(observatiiRef, { ...observatie });
     return res;

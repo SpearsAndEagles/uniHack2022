@@ -3,6 +3,7 @@ import {
   IonRouterOutlet,
   IonSplitPane,
   setupIonicReact,
+  useIonToast,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { Redirect, Route } from "react-router-dom";
@@ -30,26 +31,64 @@ import "@ionic/react/css/display.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-import { Observatie } from "./types";
+import { Animal, Observatie, TripType } from "./types";
+import Trip from "./pages/Trip";
+import Animals from "./pages/Animals";
 
 setupIonicReact();
 
 export const UserContext = createContext<{
   setEmail: Function;
   addObservation: Function;
+  addAnimal: Function;
+  currTrip: TripType;
   email: string;
   tripActive: boolean;
+  animals: any;
 }>({
   setEmail: {} as Function,
   addObservation: {} as Function,
   email: "",
   tripActive: false,
+  addAnimal: {} as Function,
+  currTrip: {
+    descriere: "",
+    titlu: "",
+    observatii: [
+      {
+        latitudine: 0,
+        longitudine: 0,
+        animal: "",
+        data: new Date(),
+        numar: "0",
+        comportament: "prezent",
+      },
+    ],
+  },
+  animals: [],
 });
 
 const App: React.FC = () => {
+  const [showToast] = useIonToast();
+
   const [userState, setUserStatewithout] = useState({
-    currTrip: { descriere: "", titlu: "", observatii: [{}] },
+    currTrip: {
+      descriere: "",
+      titlu: "",
+      observatii: [
+        {
+          latitudine: 0,
+          longitudine: 0,
+          animal: "",
+          data: new Date(),
+          numar: "0",
+          comportament: "prezent",
+        },
+      ],
+    },
     email: "",
+    animals: [],
+    tripActive: false,
   });
 
   useEffect(() => {
@@ -60,14 +99,44 @@ const App: React.FC = () => {
 
   const setUserState = (data: any) => {
     setUserStatewithout(data);
-    localStorage.userState1 = JSON.stringify(userState);
+    if (data instanceof Function) {
+      const newData = data(userState);
+      localStorage.userState1 = JSON.stringify(newData);
+    } else {
+      localStorage.userState1 = JSON.stringify(data);
+    }
   };
 
+  const addAnimal = (newAnimal: Animal) => {
+    showToast({
+      message: "New animal added",
+      color: "success",
+      duration: 2500,
+    });
+    setUserState((prev: any) => {
+      const newState = { ...prev };
+      newState.animals.push(newAnimal);
+      return newState;
+    });
+  };
+
+  const startTrip = (data: any) => {
+    setUserState((prev: any) => {
+      const newData = { ...prev };
+      newData.currTrip.descriere = data.descriere;
+      newData.currTrip.titlu = data.titlu;
+    });
+  };
   const setEmail = (newEmail: string) => {
     setUserState((prev: any) => ({ ...prev, email: newEmail }));
   };
 
   const addObservation = (newObs: Observatie) => {
+    showToast({
+      message: "New observation added",
+      color: "success",
+      duration: 2500,
+    });
     setUserState((prev: any) => {
       const newData = { ...prev };
       newData.currTrip.observatii.push(newObs);
@@ -81,7 +150,10 @@ const App: React.FC = () => {
         setEmail: setEmail,
         addObservation: addObservation,
         email: userState.email,
-        tripActive: false,
+        tripActive: userState.tripActive,
+        currTrip: userState.currTrip as TripType,
+        addAnimal: addAnimal,
+        animals: userState.animals,
       }}
     >
       <IonApp>
@@ -96,11 +168,17 @@ const App: React.FC = () => {
                   <Redirect to="/login"></Redirect>
                 )}
               </Route>
+              <Route path="/trip">
+                <Trip></Trip>
+              </Route>
               <Route path="/login">
                 <Login />
               </Route>
               <Route path="/register" exact>
                 <Register></Register>
+              </Route>
+              <Route path="/animals">
+                <Animals></Animals>
               </Route>
               <Route path="/add" exact>
                 <Add></Add>

@@ -26,7 +26,8 @@ const Add: React.FC = () => {
   const { control, handleSubmit } = formMethods;
 
   const handleAdd: any = (data: any) => {
-    context.addObservation(data);
+    context.addAnimal(data);
+    (document.getElementById("formBruh") as HTMLFormElement).reset();
   };
 
   return (
@@ -47,16 +48,12 @@ const Add: React.FC = () => {
           </IonCardHeader>
           <IonCardContent>
             <FormProvider {...formMethods}>
-              <form onSubmit={handleSubmit(handleAdd)}>
-                <Input name="species" label="Enter the species' name" />
-                <Input name="comportament" label="Introduceti comportamentul" />
-                <Input
-                  name="numar"
-                  label="Enter the number"
-                  {...{ type: "number" }}
-                />
-                <IonButton className="ion-margin" type="submit">
-                  Submit
+              <form onSubmit={handleSubmit(handleAdd)} id="formBruh">
+                <Input name="denumire" label="Common Name" />
+                <Input name="denumireStiintifica" label="Scientific Name" />
+                <Input name="tip" label="Type" {...{ type: "text" }} />
+                <IonButton color="success" className="ion-margin" type="submit">
+                  Add
                 </IonButton>
               </form>
             </FormProvider>

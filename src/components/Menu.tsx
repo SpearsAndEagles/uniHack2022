@@ -32,7 +32,10 @@ import {
   warningSharp,
   addCircle,
   atCircle,
-  fish,
+  paw,
+  person,
+  walk,
+  personAdd,
 } from "ionicons/icons";
 import "./Menu.css";
 import { useContext } from "react";
@@ -50,38 +53,32 @@ const appPages: AppPage[] = [
   {
     title: "Register",
     url: "/register",
+    iosIcon: personAdd,
+    mdIcon: personAdd,
+  },
+  {
+    title: "Login",
+    url: "/login",
     iosIcon: atCircle,
     mdIcon: atCircle,
   },
   {
-    title: "Add",
-    url: "/Add",
+    title: "Trip",
+    url: "/trip",
+    iosIcon: walk,
+    mdIcon: walk,
+  },
+  {
+    title: "Animal List",
+    url: "/animals",
+    iosIcon: paw,
+    mdIcon: paw,
+  },
+  {
+    title: "Add Animal",
+    url: "/add",
     iosIcon: addCircle,
     mdIcon: addCircle,
-  },
-  {
-    title: "Favorites",
-    url: "/page/Favorites",
-    iosIcon: heartOutline,
-    mdIcon: heartSharp,
-  },
-  {
-    title: "Archived",
-    url: "/page/Archived",
-    iosIcon: archiveOutline,
-    mdIcon: archiveSharp,
-  },
-  {
-    title: "Trash",
-    url: "/page/Trash",
-    iosIcon: trashOutline,
-    mdIcon: trashSharp,
-  },
-  {
-    title: "Spam",
-    url: "/page/Spam",
-    iosIcon: warningOutline,
-    mdIcon: warningSharp,
   },
 ];
 
@@ -112,19 +109,28 @@ const Menu: React.FC = () => {
     <IonMenu contentId="main" type="overlay">
       <IonContent>
         <IonList id="inbox-list">
-          <IonRow>
-            <IonCol>
-              <IonListHeader>
-                <IonText color="success">BioShare</IonText>
-              </IonListHeader>
-            </IonCol>
-            <IonCol>
-              <IonButton fill="outline" onClick={handleLogout}>
-                Log out
-              </IonButton>
-            </IonCol>
-          </IonRow>
-          <IonNote>{user.email}</IonNote>
+          <IonItem>
+            <IonRow>
+              <IonCol>
+                <IonListHeader>
+                  <IonText color="success">BioShare</IonText>
+                </IonListHeader>
+              </IonCol>
+              {user.email ? (
+                <IonCol>
+                  <IonButton fill="outline" onClick={handleLogout}>
+                    Log out
+                  </IonButton>
+                </IonCol>
+              ) : null}
+            </IonRow>
+          </IonItem>
+          <IonItem className="ion-align-items-center">
+            <IonIcon slot="" ios={person} md={person}></IonIcon>
+            <IonNote className="ion-margin-top">
+              {user.email ? user.email : "Not logged in"}
+            </IonNote>
+          </IonItem>
           {appPages.map((appPage, index) => {
             return (
               <IonMenuToggle key={index} autoHide={false}>
